@@ -32,7 +32,23 @@ void output_list (SqList L)
         std::cout << "The NO." << i + 1 << " element is:" << L.array[i] << std::endl;
     }
 }
-void insert_sq (SqList *L, int i, ElementType e);
+void insert_sq (SqList *L)
+{
+    system("cls");
+    int num = 0;
+    ElementType elem;
+    std::cout << "Input the location of element you want to insert:" << std::endl;
+    std::cin >> num;
+    num --;
+    std::cout << "Input the value of element you want to insert:" << std::endl;
+    std::cin >> elem;
+    for (int i = 0; i < L->last - num; i++)
+    {
+        L->array[L->last + 1] = L->array[L->last];
+    }
+    L->last ++;
+    L->array[num] = elem;
+}
 int menu()
 {
     int sel;
@@ -42,6 +58,7 @@ int menu()
         std::cout << "Choose an option" << '\n';
         std::cout << "1 - Creat a list" << '\n';
         std::cout << "2 - Output the list" << '\n';
+        std::cout << "3 - Insert an element" << '\n';
         std::cout << "0 - Exit" << '\n';
         std::cin >> sel;
         switch (sel)
@@ -51,8 +68,12 @@ int menu()
             case 2: {output_list(a);
             		fflush(stdin);
 					getchar();
-					 break;}
-            default: 
+					break;}
+            case 3: {insert_sq(&a);
+                fflush(stdin);
+                getchar();
+                break;}
+            default:
             {
                 std::cout << "Invalid option" << '\n';
                 Sleep(500);
