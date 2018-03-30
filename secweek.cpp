@@ -75,9 +75,9 @@ void delete_sq (SqList *L)
         return;
     }
     system("cls");
-    for (int i = L->last; i > num; i--)
+    for (int i = num; i < L->last; i++)
     {
-        L->array[num - 1] = L->array[num];
+        L->array[i - 1] = L->array[i];
     }
     L->array[L->last] = nullptr;
     L->last--;
