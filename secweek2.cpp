@@ -11,16 +11,17 @@ typedef struct Node
     ElementType Data;
     Node *next;
 }Node;
-Node A;
+Node *a;
 class NodeList
 {
     public:
-        Node *creat_list ()
+        Node *creat_list (int *length)
         {
-            int i = 0;
             int num;
             Node *head, *a, *b;
-            head = a = b = (Node *)malloc(sizeof(Node));
+            head = (Node *)malloc(sizeof(Node));
+            a = (Node *)malloc(sizeof(Node));
+            b = (Node *)malloc(sizeof(Node));
             system("cls");
             std::cout << "Input the number.(input -999 to stop)" << std::endl;
             std::cin >> num;
@@ -34,7 +35,8 @@ class NodeList
                 a->next = b;
                 a = b;
                 b = (Node *)malloc(sizeof(Node));
-            }	
+                (*length)++;
+            }
             std::cout << "The creat operation is completed." << std::endl;
             return head;
             fflush(stdin);
@@ -50,114 +52,161 @@ class NodeList
                 std::cout << "The NO." << i + 1 << " element is:" << e->Data << std::endl;
                 if ((e->next)->Data != -999)
                 e = e->next;
-                else 
+                else
                 return;
             }
             std::cout << "The output operation is completed." << std::endl;
         }
 
-        void insert_sq (SqList *L)
+        void insert_sq (Node *L, int *length)
         {
             system("cls");
+            Node *e = L;
+            Node *p = (Node *)malloc(sizeof(Node));
             int num = 0;
             ElementType elem;
             std::cout << "Input the location of element you want to insert:" << std::endl;
             std::cin >> num;
-            if (num < 1 || num > L->last + 1)
+            if(num == *length + 1)
+            {
+            	for (int i = 1; i < *length; i++)
+	            {
+	                e = e->next;
+	            }
+	            system("cls");
+	            std::cout << "Input the value of element you want to insert:" << std::endl;
+	            std::cin >> elem;
+            	p->Data = elem;
+				p->next = e->next;
+				e->next = p;
+				return;
+			}
+            if (num < 1 || num > *length)
             {
                 std::cout << "Illegal location!" << '\n' << std::endl;
                 return;
             }
             system("cls");
-            num --;
             std::cout << "Input the value of element you want to insert:" << std::endl;
             std::cin >> elem;
-            for (int i = 0; i < L->last - num; i++)
+            if(num == 1)
             {
-                L->array[L->last - i] = L->array[L->last - i -1];
+				p->Data = L->Data;
+				L->Data = elem;
+				p->next = L->next;
+				L->next = p;
+				return;
+			}
+            num --;
+			for (int i = 1; i < num; i++)
+            {
+                e = e->next;
             }
-            L->last ++;
-            L->array[num] = elem;
+            (*length)++;
+            p->Data = elem;
+            p->next = e->next;
+            e->next = p;
             std::cout << "The insert operation is completed." << std::endl;
             fflush(stdin);
             getchar();
         }
 
-        void delete_sq (SqList *L)
+        void delete_sq (Node *L, int *length)
         {
             system("cls");
             int num = 0;
+            Node *e = L;
             std::cout << "Input the location of element you want to delete:" << std::endl;
             std::cin >> num;
-            if (num < 1 || num > L->last + 1)
+            if(num == *length + 1)
+            {
+            	for (int i = 1; i < *length; i++)
+	            {
+	                e = e->next;
+	            }
+				e->next = (e->next)->next;
+				return;
+			}
+            if (num < 1 || num > *length)
             {
                 std::cout << "Illegal location!" << '\n' << std::endl;
                 return;
             }
             system("cls");
-            for (int i = num; i < L->last; i++)
+            if(num == 1)
             {
-                L->array[i - 1] = L->array[i];
+            	L->Data = (L->next)->Data;
+				L->next = (L->next)->next;
+				return;
+			}
+            for (int i = 2; i < num; i++)
+            {
+                e = e->next;
             }
-            L->array[L->last] = nullptr;
-            L->last--;
+            e->next = (e->next)->next;
+            (*length)--;
             std::cout << "The delete operation is completed." << std::endl;
             fflush(stdin);
             getchar();
         }
 
-        void queryva (SqList *L)
+        void queryva (Node *L, int *length)
         {
             system("cls");
-            std::cout << "Input the value you want to query:" << '\n' <<std::endl;
+            Node *e = L;
+            std::cout << "Input the value you want to query:" <<std::endl;
             int value = 0;
             std::cin >> value;
-            for(int i = 0; i <= L->last; i++)
+            for(int i = 0; i <= *length; i++)
             {
-                if (value != L->array[i] && i == L->last)
+                if (value != e->Data && i == *length)
                 std::cout << "There's no same value in the list." << '\n' <<std::endl;
-                if (value == L->array[i])
+                if (value == e->Data)
                 {
                     std::cout << "The element " << value <<"'s No was " << i + 1 << '\n' <<std::endl;
                     return;
                 }
+                e = e->next;
             }
         }
 
-        void queryno (SqList *L)
+        void queryno (Node *L, int *length)
         {
             system("cls");
-            std::cout << "Input the No. you want to query:" << '\n' <<std::endl;
+            std::cout << "Input the No. you want to query:" <<std::endl;
             int no = 0;
+            Node *e = L;
             std::cin >> no;
-            for(int i = 0; i <= L->last; i++)
+            for(int i = 1; i <= *length; i++)
             {
-                if (no != i && i == L->last)
+                if (no > *length || no < 1)
                 std::cout << "The No. you input doesn't exist in the list." << '\n' <<std::endl;
                 if (no == i)
                 {
-                    std::cout << "The No." << no <<" element's value was " << L->array[i] << '\n' <<std::endl;
+                    std::cout << "The No." << no <<" element's value was " << e->Data << '\n' <<std::endl;
                     return;
                 }
+                e = e->next;
             }
         }
 
-        void query_sq (SqList *L)
+        void query_sq (Node *L,int *length)
         {
             system("cls");
             int num = 0;
             std::cout << "Choose the way you want to query:" << '\n'
             << "1.Query by value." << '\n' << "2.Query by the No." << '\n' << std::endl;
             std::cin >> num;
-            if (num == 1) queryva (L);
-            else if (num == 2) queryno (L);
+            if (num == 1) queryva (L, length);
+            else if (num == 2) queryno (L, length);
             else std::cout << "Invalid option." << '\n' <<std::endl;
         }
 };
 
 int  main()
 {
-    List L;
+    NodeList L;
+    int length = 0;
     int sel;
     do{
         system("cls");
@@ -173,18 +222,18 @@ int  main()
         switch (sel)
         {
             case 0: {return 0; break;}
-            case 1: {L.creat_list(&a); break;}
+            case 1: {a = L.creat_list(&length); break;}
             case 2: {L.output_list(a);
             		fflush(stdin);
 					getchar();
 					break;}
-            case 3: {L.insert_sq(&a);
+            case 3: {L.insert_sq(a, &length);
                 fflush(stdin);
                 break;}
-            case 4: {L.delete_sq(&a);
+            case 4: {L.delete_sq(a, &length);
                 fflush(stdin);
                 break;}
-            case 5: {L.query_sq(&a);
+            case 5: {L.query_sq(a, &length);
             fflush(stdin);
             getchar();
             break;}
